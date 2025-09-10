@@ -1,0 +1,60 @@
+{
+  "id": "hit-devops-sample",
+  "version": "2.0",
+  "name": "HIT DevOps App",
+  "url": "http://localhost:8080/HIT_GroupApp/index.jsp",
+  "tests": [
+    {
+      "id": "home-flow",
+      "name": "Home Flow",
+      "commands": [
+        {
+          "id": "open",
+          "command": "open",
+          "target": "/HIT_GroupApp/index.jsp"
+        },
+        {
+          "id": "assert",
+          "command": "assertTitle",
+          "target": "HIT DevOps App"
+        },
+        {
+          "id": "type",
+          "command": "type",
+          "target": "id=name",
+          "value": "Shay"
+        },
+        {
+          "id": "click",
+          "command": "click",
+          "target": "id=submitBtn"
+        },
+        {
+          "id": "assertText",
+          "command": "assertText",
+          "target": "id=result",
+          "value": "Hello"
+        },
+        {
+          "id": "click",
+          "command": "click",
+          "target": "id=docsLink"
+        },
+        {
+          "id": "assert",
+          "command": "assertUrl",
+          "target": "*docs.jsp"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "suite1",
+      "name": "smoke",
+      "tests": [
+        "home-flow"
+      ]
+    }
+  ]
+}
