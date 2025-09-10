@@ -1,4 +1,4 @@
-# HIT DevOps Final - Skeleton
+# HIT DevOps Final
 
 This repo is (Tomcat + Jenkins + Monitoring + Selenium + Gatling).
 
