@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     TOMCAT_WEBAPPS = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps'
-    APP_NAME       = 'HIT_GroupApp' // change to include your real names
+    APP_NAME       = 'DevOps' // change to include your real names
     APP_SRC        = 'app'
     BASE_URL       = "http://localhost:8080/${APP_NAME}"
     GATLING_HOME   = 'C:\\Gatling' // change if installed elsewhere
