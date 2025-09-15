@@ -8,47 +8,47 @@
   <style>
     body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
     h1 { margin-top: 0; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 720px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 820px; }
     fieldset { border: none; margin: 0; padding: 0 0 12px; }
     legend { font-weight: 600; margin-bottom: 6px; }
-    label { margin-right: 12px; }
+    label { margin-right: 12px; display: inline-flex; align-items: center; gap: 6px; }
     select { padding: 6px 8px; }
-    .row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(280px,1fr)); gap: 18px 24px; }
     .actions { margin-top: 12px; }
     button { padding: 8px 16px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
     #result { margin-top: 16px; white-space: pre-line; }
     #result .ok { color: #0a7c2f; font-weight: 700; }
     #result .bin { color: #555; }
     nav a { text-decoration: none; }
+    ul { margin: 6px 0 0 20px; }
   </style>
 </head>
 <body>
-  <header class="row" style="align-items:center; justify-content:space-between; max-width:720px;">
+  <header style="display:flex;align-items:center;justify-content:space-between;max-width:820px;">
     <h1>HIT DevOps App</h1>
-    <!-- קישור לתיעוד/דף משני: חובה עבור הולידציה 3 -->
     <nav><a id="docsLink" href="docs.jsp">Docs</a></nav>
   </header>
 
   <main class="card">
-    <!-- בחירת שפה (למען הולידציה: נבחר EN כדי שהטקסט יתחיל ב-Hello) -->
-    <fieldset>
-      <legend>Language</legend>
-      <label><input type="radio" name="lang" value="en" checked> English</label>
-      <label><input type="radio" name="lang" value="he"> עברית</label>
-    </fieldset>
+    <div class="grid">
+      <!-- שפה -->
+      <fieldset>
+        <legend>Language</legend>
+        <label><input type="radio" name="lang" value="en" checked> English</label>
+        <label><input type="radio" name="lang" value="he"> עברית</label>
+      </fieldset>
 
-    <!-- ללא הקלדה: בחירת "שם" מרשימה -->
-    <fieldset>
-      <legend>Select user</legend>
-      <select id="userSelect" aria-label="User">
-        <option value="alice">Alice</option>
-        <option value="bob">Bob</option>
-        <option value="charlie">Charlie</option>
-      </select>
-    </fieldset>
+      <!-- בחירת משתמש (במקום שדה כתיבה) -->
+      <fieldset>
+        <legend>Select user</legend>
+        <select id="userSelect" aria-label="User">
+          <option value="alice">Alice</option>
+          <option value="bob">Bob</option>
+          <option value="charlie">Charlie</option>
+        </select>
+      </fieldset>
 
-    <div class="row">
-      <!-- בחירת קורסים (צ'קבוקסים) -->
+      <!-- קורסים -->
       <fieldset>
         <legend>Courses</legend>
         <label><input type="checkbox" name="courses" value="DevOps 101"> DevOps 101</label>
@@ -58,11 +58,41 @@
         <label><input type="checkbox" name="courses" value="Monitoring"> Monitoring</label>
       </fieldset>
 
-      <!-- סוג טלפון (ללא כתיבה, רק בחירה) -->
+      <!-- סוג טלפון -->
       <fieldset>
         <legend>Phone type</legend>
         <label><input type="radio" name="phoneType" value="Mobile" checked> Mobile</label>
         <label><input type="radio" name="phoneType" value="Landline"> Landline</label>
+      </fieldset>
+
+      <!-- רחוב (בחירה בלבד) -->
+      <fieldset>
+        <legend>Street</legend>
+        <select id="streetSelect" aria-label="Street">
+          <option value="Herzl St.">Herzl St.</option>
+          <option value="Bialik St.">Bialik St.</option>
+          <option value="Rothschild Blvd.">Rothschild Blvd.</option>
+          <option value="Weizmann St.">Weizmann St.</option>
+        </select>
+      </fieldset>
+
+      <!-- איך הגעת אלינו (Referral) -->
+      <fieldset>
+        <legend>How did you hear about us?</legend>
+        <select id="referralSelect" aria-label="Referral">
+          <option value="Google">Google</option>
+          <option value="Friend">Friend</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Campus board">Campus board</option>
+        </select>
+      </fieldset>
+
+      <!-- העדפה נוספת (עוד משהו) -->
+      <fieldset>
+        <legend>Preferred contact time</legend>
+        <label><input type="radio" name="contactTime" value="Morning" checked> Morning</label>
+        <label><input type="radio" name="contactTime" value="Afternoon"> Afternoon</label>
+        <label><input type="radio" name="contactTime" value="Evening"> Evening</label>
       </fieldset>
     </div>
 
@@ -70,39 +100,54 @@
       <button id="submitBtn" type="button">SUBMIT</button>
     </div>
 
-    <!-- תוצאות -->
-    <div id="result" aria-live="polite" role="status">
-      <!-- יתמלא לאחר SUBMIT -->
-    </div>
+    <div id="result" aria-live="polite" role="status"></div>
   </main>
 
   <script>
-    (function () {
-      const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    // מבטיחים שהקוד ירוץ רק אחרי טעינת ה-DOM
+    document.addEventListener('DOMContentLoaded', function () {
+      const $  = (sel, ctx=document) => ctx.querySelector(sel);
       const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
       $('#submitBtn').addEventListener('click', function () {
         const lang = $('input[name="lang"]:checked').value;
-        const userSel = $('#userSelect');
-        const userName = userSel.options[userSel.selectedIndex].text;
 
-        const courses = $$('input[name="courses"]:checked').map(x => x.value);
+        const userSel   = $('#userSelect');
+        const userName  = userSel.options[userSel.selectedIndex].text;
+
+        const streetSel = $('#streetSelect');
+        const street    = streetSel.options[streetSel.selectedIndex].text;
+
+        const refSel    = $('#referralSelect');
+        const referral  = refSel.options[refSel.selectedIndex].text;
+
+        const courses   = $$("input[name='courses']:checked").map(x => x.value);
         const coursesText = courses.length ? courses.join(', ') : 'none';
 
-        const phoneTypeEl = $('input[name="phoneType"]:checked');
-        const phoneType = phoneTypeEl ? phoneTypeEl.value : 'N/A';
+        const phoneTypeEl = $("input[name='phoneType']:checked");
+        const phoneType   = phoneTypeEl ? phoneTypeEl.value : 'N/A';
+
+        const contactTimeEl = $("input[name='contactTime']:checked");
+        const contactTime   = contactTimeEl ? contactTimeEl.value : 'N/A';
 
         const hello = (lang === 'he' ? 'שלום ' : 'Hello ') + userName;
 
+        const resHtml = [
+          `<p class="ok" id="greet">${hello}</p>`,
+          `<p class="bin">Action result: Submit selected.</p>`,
+          `<ul>`,
+          `<li><strong>Street:</strong> ${street}</li>`,
+          `<li><strong>Heard about us via:</strong> ${referral}</li>`,
+          `<li><strong>Phone type:</strong> ${phoneType}</li>`,
+          `<li><strong>Preferred contact time:</strong> ${contactTime}</li>`,
+          `<li><strong>Selected courses:</strong> ${coursesText}</li>`,
+          `</ul>`
+        ].join('\n');
+
         const res = $('#result');
-        res.innerHTML =
-          `<p class="ok" id="greet">${hello}</p>` +
-          `<p class="bin">Action result: Submit selected.</p>` +
-          `<p>ID: N/A</p>` +
-          `<p>Phone: ${phoneType}</p>` +
-          `<p>Selected courses: ${coursesText}</p>`;
+        res.innerHTML = resHtml;
       });
-    })();
+    });
   </script>
 </body>
 </html>
