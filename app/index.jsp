@@ -103,51 +103,58 @@
     <div id="result" aria-live="polite" role="status"></div>
   </main>
 
-  <script>
-    // מבטיחים שהקוד ירוץ רק אחרי טעינת ה-DOM
-    document.addEventListener('DOMContentLoaded', function () {
-      const $  = (sel, ctx=document) => ctx.querySelector(sel);
-      const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const $  = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-      $('#submitBtn').addEventListener('click', function () {
-        const lang = $('input[name="lang"]:checked').value;
+    // חשוב: לוודא שהכפתור הוא type="button" ב-HTML. נגן גם מפני submit של form:
+    $('#submitBtn').addEventListener('click', function (e) {
+      e.preventDefault();
 
-        const userSel   = $('#userSelect');
-        const userName  = userSel.options[userSel.selectedIndex].text;
+      const lang = $('input[name="lang"]:checked').value;
 
-        const streetSel = $('#streetSelect');
-        const street    = streetSel.options[streetSel.selectedIndex].text;
+      const userSel  = $('#userSelect');
+      const userName = userSel && userSel.options.length
+        ? userSel.options[userSel.selectedIndex].text
+        : 'N/A';
 
-        const refSel    = $('#referralSelect');
-        const referral  = refSel.options[refSel.selectedIndex].text;
+      const streetSel = $('#streetSelect');
+      const street = streetSel && streetSel.options.length
+        ? streetSel.options[streetSel.selectedIndex].text
+        : 'N/A';
 
-        const courses   = $$("input[name='courses']:checked").map(x => x.value);
-        const coursesText = courses.length ? courses.join(', ') : 'none';
+      const refSel = $('#referralSelect');
+      const referral = refSel && refSel.options.length
+        ? refSel.options[refSel.selectedIndex].text
+        : 'N/A';
 
-        const phoneTypeEl = $("input[name='phoneType']:checked");
-        const phoneType   = phoneTypeEl ? phoneTypeEl.value : 'N/A';
+      const courses = $$("input[name='courses']:checked").map(x => x.value);
+      const coursesText = courses.length ? courses.join(', ') : 'none';
 
-        const contactTimeEl = $("input[name='contactTime']:checked");
-        const contactTime   = contactTimeEl ? contactTimeEl.value : 'N/A';
+      const phoneTypeEl = $("input[name='phoneType']:checked");
+      const phoneType = phoneTypeEl ? phoneTypeEl.value : 'N/A';
 
-        const hello = (lang === 'he' ? 'שלום ' : 'Hello ') + userName;
+      const contactTimeEl = $("input[name='contactTime']:checked");
+      const contactTime = contactTimeEl ? contactTimeEl.value : 'N/A';
 
-        const resHtml = [
-          `<p class="ok" id="greet">${hello}</p>`,
-          `<p class="bin">Action result: Submit selected.</p>`,
-          `<ul>`,
-          `<li><strong>Street:</strong> ${street}</li>`,
-          `<li><strong>Heard about us via:</strong> ${referral}</li>`,
-          `<li><strong>Phone type:</strong> ${phoneType}</li>`,
-          `<li><strong>Preferred contact time:</strong> ${contactTime}</li>`,
-          `<li><strong>Selected courses:</strong> ${coursesText}</li>`,
-          `</ul>`
-        ].join('\n');
+      const hello = (lang === 'he' ? 'שלום ' : 'Hello ') + userName;
 
-        const res = $('#result');
-        res.innerHTML = resHtml;
-      });
+      var resHtml = ''
+        + '<p class="ok" id="greet">' + hello + '</p>'
+        + '<p class="bin">Action result: Submit selected.</p>'
+        + '<ul>'
+        +   '<li><strong>Street:</strong> ' + street + '</li>'
+        +   '<li><strong>Heard about us via:</strong> ' + referral + '</li>'
+        +   '<li><strong>Phone type:</strong> ' + phoneType + '</li>'
+        +   '<li><strong>Preferred contact time:</strong> ' + contactTime + '</li>'
+        +   '<li><strong>Selected courses:</strong> ' + coursesText + '</li>'
+        + '</ul>';
+
+      $('#result').innerHTML = resHtml; // כל לחיצה מחליפה פלט — עובד שוב ושוב
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
