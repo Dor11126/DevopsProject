@@ -1,187 +1,108 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>HIT DevOps App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; }
-    header { display: flex; justify-content: space-between; align-items: center; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 16px; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    label { display: block; margin: .4rem 0 .2rem; }
-    input[type=text], input[type=tel], select { width: 100%; padding: .5rem; border-radius: 8px; border: 1px solid #ccc; }
-    .row { margin: .6rem 0; }
-    .btn { padding: .55rem .95rem; border: 0; border-radius: 8px; background:#2d6cdf; color:#fff; cursor:pointer; }
-    .muted { color: #666; }
-    .ok { color: #0b8a00; }
-    .warn { color: #b30000; }
-    footer { margin-top: 2rem; color: #666; font-size: .9rem; }
-    .kpi { display:inline-block; padding:.3rem .6rem; border-radius:8px; background:#f5f7fb; margin:.15rem .25rem; }
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    h1 { margin-top: 0; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 720px; }
+    fieldset { border: none; margin: 0; padding: 0 0 12px; }
+    legend { font-weight: 600; margin-bottom: 6px; }
+    label { margin-right: 12px; }
+    select { padding: 6px 8px; }
+    .row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .actions { margin-top: 12px; }
+    button { padding: 8px 16px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
+    #result { margin-top: 16px; white-space: pre-line; }
+    #result .ok { color: #0a7c2f; font-weight: 700; }
+    #result .bin { color: #555; }
+    nav a { text-decoration: none; }
   </style>
 </head>
 <body>
-<%-- ===== Helpers ===== --%>
-<%!
-  private static String esc(String s) {
-    if (s == null) return "";
-    return s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-            .replace("\"","&quot;").replace("'","&#39;");
-  }
-  private static boolean has(String[] arr, String v){
-    if(arr==null) return false;
-    for(String s:arr) if(v.equals(s)) return true;
-    return false;
-  }
-%>
+  <header class="row" style="align-items:center; justify-content:space-between; max-width:720px;">
+    <h1>HIT DevOps App</h1>
+    <!-- קישור לתיעוד/דף משני: חובה עבור הולידציה 3 -->
+    <nav><a id="docsLink" href="docs.jsp">Docs</a></nav>
+  </header>
 
-<%
-  // ===== Read params =====
-  String name      = request.getParameter("name");
-  String tz        = request.getParameter("tz");         // ת"ז
-  String phone     = request.getParameter("phone");      // טלפון
-  String phoneType = request.getParameter("phoneType");  // mobile/landline
-  String lang      = request.getParameter("lang");       // en/he
-  String action    = request.getParameter("action");     // greet/upper/reverse/count
-  String[] courses = request.getParameterValues("courses"); // devops,cicd,docker,monitoring,gatling,java
+  <main class="card">
+    <!-- בחירת שפה (למען הולידציה: נבחר EN כדי שהטקסט יתחיל ב-Hello) -->
+    <fieldset>
+      <legend>Language</legend>
+      <label><input type="radio" name="lang" value="en" checked> English</label>
+      <label><input type="radio" name="lang" value="he"> עברית</label>
+    </fieldset>
 
-  if (lang == null)   lang = "en";
-  if (action == null) action = "greet";
+    <!-- ללא הקלדה: בחירת "שם" מרשימה -->
+    <fieldset>
+      <legend>Select user</legend>
+      <select id="userSelect" aria-label="User">
+        <option value="alice">Alice</option>
+        <option value="bob">Bob</option>
+        <option value="charlie">Charlie</option>
+      </select>
+    </fieldset>
 
-  boolean submitted =
-      (name != null) || (tz != null) || (phone != null) ||
-      (phoneType != null) || (lang != null) || (action != null) ||
-      (courses != null);
-%>
+    <div class="row">
+      <!-- בחירת קורסים (צ'קבוקסים) -->
+      <fieldset>
+        <legend>Courses</legend>
+        <label><input type="checkbox" name="courses" value="DevOps 101"> DevOps 101</label>
+        <label><input type="checkbox" name="courses" value="Cloud Basics"> Cloud Basics</label>
+        <label><input type="checkbox" name="courses" value="Kubernetes"> Kubernetes</label>
+        <label><input type="checkbox" name="courses" value="Jenkins CI"> Jenkins CI</label>
+        <label><input type="checkbox" name="courses" value="Monitoring"> Monitoring</label>
+      </fieldset>
 
-<header>
-  <h1>HIT DevOps App</h1>
-  <nav>
-    <a id="docsLink" href="docs.jsp">Docs</a>
-  </nav>
-</header>
-
-<main class="grid">
-  <section class="card">
-    <h2>Form</h2>
-    <form method="get" action="index.jsp">
-      <div class="row">
-        <label for="name">Enter your name:</label>
-        <input type="text" id="name" name="name" placeholder="Your name..." value="<%= esc(name) %>" required />
-      </div>
-
-      <div class="row">
-        <label for="tz">ID (Teudat Zehut):</label>
-        <input type="text" id="tz" name="tz" placeholder="9 digits" value="<%= esc(tz) %>" />
-      </div>
-
-      <div class="row">
-        <label for="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" placeholder="e.g. 05x-xxxxxxx" value="<%= esc(phone) %>" />
-        <label><input type="radio" name="phoneType" value="mobile"   <%= "mobile".equals(phoneType)?"checked":"" %> /> נייד (Mobile)</label>
-        <label><input type="radio" name="phoneType" value="landline" <%= "landline".equals(phoneType)?"checked":"" %> /> נייח (Landline)</label>
-      </div>
-
-      <div class="row">
-        <label>Greeting language:</label>
-        <label><input type="radio" name="lang" value="en" <%= "en".equals(lang)?"checked":"" %> /> English</label>
-        <label><input type="radio" name="lang" value="he" <%= "he".equals(lang)?"checked":"" %> /> Hebrew</label>
-      </div>
-
-      <div class="row">
-        <label for="action">Action on submit:</label>
-        <select id="action" name="action">
-          <option value="greet"   <%= "greet".equals(action)?"selected":"" %>>Greet</option>
-          <option value="upper"   <%= "upper".equals(action)?"selected":"" %>>Uppercase name</option>
-          <option value="reverse" <%= "reverse".equals(action)?"selected":"" %>>Reverse name</option>
-          <option value="count"   <%= "count".equals(action)?"selected":"" %>>Count letters</option>
-        </select>
-      </div>
-
-      <div class="row">
-        <label>Courses you’re interested in:</label>
-        <label><input type="checkbox" name="courses" value="devops"     <%= has(courses,"devops")?"checked":"" %> /> DevOps Basics</label>
-        <label><input type="checkbox" name="courses" value="cicd"       <%= has(courses,"cicd")?"checked":"" %> /> CI/CD Pipelines</label>
-        <label><input type="checkbox" name="courses" value="docker"     <%= has(courses,"docker")?"checked":"" %> /> Docker & Kubernetes</label>
-        <label><input type="checkbox" name="courses" value="monitoring" <%= has(courses,"monitoring")?"checked":"" %> /> Monitoring & Logging</label>
-        <label><input type="checkbox" name="courses" value="gatling"    <%= has(courses,"gatling")?"checked":"" %> /> Performance Testing (Gatling)</label>
-        <label><input type="checkbox" name="courses" value="java"       <%= has(courses,"java")?"checked":"" %> /> Java Fundamentals</label>
-      </div>
-
-      <div class="row">
-        <button id="submitBtn" class="btn" type="submit">Submit</button>
-      </div>
-    </form>
-    <p class="muted">Tip: default language is English so <strong>#result</strong> includes “Hello” אחרי מילוי שם (טוב ל-Selenium).</p>
-  </section>
-
-  <section class="card">
-    <h2>Result</h2>
-    <div id="result">
-      <%
-        if (!submitted) {
-      %>
-          <p class="warn">Fill the form and press Submit.</p>
-      <%
-        } else {
-          String nm = (name==null?"":name.trim());
-          boolean hasName = !nm.isEmpty();
-          String greeting = "en".equals(lang) ? "Hello" : "שלום";
-          String line1 = hasName ? (greeting + " " + esc(nm) + " 👋") :
-                                   ("en".equals(lang) ? "No name provided." : "לא סופק שם.");
-      %>
-          <p class="ok"><%= line1 %></p>
-
-          <%-- Action output --%>
-          <%
-            String actionOut = "";
-            if ("upper".equals(action) && hasName)        actionOut = nm.toUpperCase();
-            else if ("reverse".equals(action) && hasName) actionOut = new StringBuilder(nm).reverse().toString();
-            else if ("count".equals(action) && hasName)   actionOut = "Letters: " + nm.length();
-            else                                          actionOut = "Greet selected.";
-          %>
-          <p><strong>Action result:</strong> <span class="kpi"><%= esc(actionOut) %></span></p>
-
-          <%-- ID & Phone --%>
-          <p><strong>ID:</strong> <span class="kpi"><%= esc(tz==null?"":tz.trim()) %></span></p>
-          <p><strong>Phone:</strong> <span class="kpi"><%= esc(phone==null?"":phone.trim()) %></span>
-             <%= (phoneType!=null && !"".equals(phoneType)) ? ("<span class='kpi'>"+("mobile".equals(phoneType)?"Mobile":"Landline")+"</span>") : "" %>
-          </p>
-
-          <%-- Courses list --%>
-          <%
-            if (courses != null && courses.length > 0) {
-              java.util.Map<String,String> map = new java.util.HashMap<>();
-              map.put("devops","DevOps Basics");
-              map.put("cicd","CI/CD Pipelines");
-              map.put("docker","Docker & Kubernetes");
-              map.put("monitoring","Monitoring & Logging");
-              map.put("gatling","Performance Testing (Gatling)");
-              map.put("java","Java Fundamentals");
-              StringBuilder sb = new StringBuilder();
-              for (int i=0;i<courses.length;i++){
-                if (i>0) sb.append(", ");
-                sb.append(map.getOrDefault(courses[i], courses[i]));
-              }
-          %>
-              <p><strong>Selected courses:</strong> <span class="kpi"><%= esc(sb.toString()) %></span></p>
-          <%
-            } else {
-          %>
-              <p><strong>Selected courses:</strong> none</p>
-          <%
-            }
-          %>
-      <%
-        }
-      %>
+      <!-- סוג טלפון (ללא כתיבה, רק בחירה) -->
+      <fieldset>
+        <legend>Phone type</legend>
+        <label><input type="radio" name="phoneType" value="Mobile" checked> Mobile</label>
+        <label><input type="radio" name="phoneType" value="Landline"> Landline</label>
+      </fieldset>
     </div>
-  </section>
-</main>
 
-<footer>
-  <p>App is running.</p>
-  <p class="muted">Health: <span id="health">OK</span></p>
-</footer>
+    <div class="actions">
+      <button id="submitBtn" type="button">SUBMIT</button>
+    </div>
+
+    <!-- תוצאות -->
+    <div id="result" aria-live="polite" role="status">
+      <!-- יתמלא לאחר SUBMIT -->
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const $ = (sel, ctx=document) => ctx.querySelector(sel);
+      const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+      $('#submitBtn').addEventListener('click', function () {
+        const lang = $('input[name="lang"]:checked').value;
+        const userSel = $('#userSelect');
+        const userName = userSel.options[userSel.selectedIndex].text;
+
+        const courses = $$('input[name="courses"]:checked').map(x => x.value);
+        const coursesText = courses.length ? courses.join(', ') : 'none';
+
+        const phoneTypeEl = $('input[name="phoneType"]:checked');
+        const phoneType = phoneTypeEl ? phoneTypeEl.value : 'N/A';
+
+        const hello = (lang === 'he' ? 'שלום ' : 'Hello ') + userName;
+
+        const res = $('#result');
+        res.innerHTML =
+          `<p class="ok" id="greet">${hello}</p>` +
+          `<p class="bin">Action result: Submit selected.</p>` +
+          `<p>ID: N/A</p>` +
+          `<p>Phone: ${phoneType}</p>` +
+          `<p>Selected courses: ${coursesText}</p>`;
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -11,15 +11,16 @@
         { "command": "open",        "target": "http://localhost:8080/DevOps/index.jsp" },
         { "command": "assertTitle", "target": "HIT DevOps App" },
 
-        { "command": "click", "target": "css=input[name='lang'][value='en']" },
-        { "command": "type",  "target": "id=name",      "value": "Dor Cohen" },
+        { "command": "click",  "target": "css=input[name='lang'][value='en']" },
+        { "command": "select", "target": "id=userSelect", "value": "value=alice" },
+
         { "command": "click", "target": "id=submitBtn" },
 
         { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
         { "command": "assertTextMatches",     "target": "css=#result .ok", "value": "regexp:^Hello\\b.*" },
 
-        { "command": "click",      "target": "id=docsLink" },
-        { "command": "assertUrl",  "target": "*docs.jsp" }
+        { "command": "click",     "target": "id=docsLink" },
+        { "command": "assertUrl", "target": "*docs.jsp" }
       ]
     }
   ],
