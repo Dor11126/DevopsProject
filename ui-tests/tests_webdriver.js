@@ -1,15 +1,29 @@
-// Simple Selenium WebDriver runner (Firefox headless) for HIT DevOps App
+// Selenium WebDriver runner (Firefox headless) for HIT DevOps App
 const fs = require('fs');
-const {Builder, By, until} = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const firefox = require('selenium-webdriver/firefox');
 
 const BASE = 'http://localhost:8080/DevOps/index.jsp';
 const TIMEOUT = 10000; // 10s per wait
 
 async function buildDriver() {
-  const opts = new firefox.Options().headless().windowSize({width: 1280, height: 900});
-  // אם מוכרחים כרום, אפשר להחליף ל: forBrowser('chrome') עם אופציות headless.
-  return await new Builder().forBrowser('firefox').setFirefoxOptions(opts).build();
+  // אפשר לקבוע דפדפן דרך משתנה סביבה BROWSER=firefox|chrome (ברירת מחדל: firefox)
+  const browser = (process.env.BROWSER || 'firefox').toLowerCase();
+
+  if (browser === 'chrome') {
+    const opts = new chrome.Options()
+      .addArguments('--headless=new', '--disable-gpu', '--no-sandbox', '--window-size=1280,900');
+    const driver = await new Builder().forBrowser('chrome').setChromeOptions(opts).build();
+    return driver;
+  }
+
+  // Firefox (מומלץ בג'נקינס על Windows)
+  const fopts = new firefox.Options().addArguments('-headless');
+  const driver = await new Builder().forBrowser('firefox').setFirefoxOptions(fopts).build();
+  // גודל חלון כדי לוודא אלמנטים נראים גם בהד־לס
+  try { await driver.manage().window().setRect({ width: 1280, height: 900 }); } catch (_) {}
+  return driver;
 }
 
 async function openHome(driver) {
@@ -57,12 +71,11 @@ async function testHomeEN() {
     if (street !== "Street: Herzl St.") throw new Error(`Bad street: ${street}`);
     if (courses !== "Selected courses: DevOps 101, Kubernetes") throw new Error(`Bad courses: ${courses}`);
 
-    // ניווט ל־Docs ואימות H1
     await clickCss(driver, "#docsLink");
     const h1 = await getText(driver, "h1");
     if (h1 !== "Docs") throw new Error(`Docs h1 mismatch: ${h1}`);
 
-    return {name: "Home Flow EN - 3 validations", ok: true};
+    return { name: "Home Flow EN - 3 validations", ok: true };
   } finally {
     await driver.quit();
   }
@@ -79,7 +92,7 @@ async function testHE() {
     const greet = await getText(driver, "#result .ok");
     if (greet !== "שלום Bob") throw new Error(`Expected "שלום Bob", got "${greet}"`);
 
-    return {name: "Greeting HE (שלום)", ok: true};
+    return { name: "Greeting HE (שלום)", ok: true };
   } finally {
     await driver.quit();
   }
@@ -96,7 +109,7 @@ async function testNoCourses() {
     if (greet !== "Hello Alice") throw new Error(`Expected "Hello Alice", got "${greet}"`);
     if (last !== "Selected courses: none") throw new Error(`Expected no courses, got "${last}"`);
 
-    return {name: "Default no courses", ok: true};
+    return { name: "Default no courses", ok: true };
   } finally {
     await driver.quit();
   }
@@ -116,7 +129,7 @@ async function testRefresh() {
     street = await getText(driver, "#result ul li:nth-child(1)");
     if (street !== "Street: Bialik St.") throw new Error(`Bad street #2: ${street}`);
 
-    return {name: "Submit twice updates result", ok: true};
+    return { name: "Submit twice updates result", ok: true };
   } finally {
     await driver.quit();
   }
@@ -125,9 +138,6 @@ async function testRefresh() {
 (async () => {
   const results = [];
   let failed = false;
-
-  // בדיקת אפליקציה חיה לפני הכל (כמו ב־Jenkins)
-  // נוותר על curl כאן; אם טעינת BASE נופלת, ייזרק שגיאה מה־wait.
 
   for (const fn of [testHomeEN, testHE, testNoCourses, testRefresh]) {
     try {
@@ -138,7 +148,7 @@ async function testRefresh() {
       failed = true;
       const name = fn.name;
       console.error(`[FAIL] ${name}: ${e.message}`);
-      results.push({name, ok: false, error: e.message});
+      results.push({ name, ok: false, error: e.message });
     }
   }
 
