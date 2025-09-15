@@ -1,30 +1,89 @@
 {
-  "id": "hit-devops-selenium",
+  "id": "hit-devops-no-typing",
   "version": "2.0",
-  "name": "Devops personal site",
+  "name": "DevOps No-Typing UI",
   "url": "http://localhost:8080/DevOps/index.jsp",
   "tests": [
     {
-      "id": "home-flow",
-      "name": "Home Flow",
+      "id": "t-home",
+      "name": "Home Flow EN - 3 validations",
       "commands": [
-        { "command": "open",        "target": "http://localhost:8080/DevOps/index.jsp" },
+        { "command": "open", "target": "http://localhost:8080/DevOps/index.jsp" },
         { "command": "assertTitle", "target": "HIT DevOps App" },
 
         { "command": "click",  "target": "css=input[name='lang'][value='en']" },
-        { "command": "select", "target": "id=userSelect", "value": "value=alice" },
+        { "command": "select", "target": "id=userSelect",      "value": "value=alice" },
+        { "command": "select", "target": "id=streetSelect",    "value": "label=Herzl St." },
+        { "command": "select", "target": "id=referralSelect",  "value": "label=Google" },
+        { "command": "click",  "target": "css=input[name='courses'][value='DevOps 101']" },
+        { "command": "click",  "target": "css=input[name='courses'][value='Kubernetes']" },
+
+        { "command": "click",  "target": "id=submitBtn" },
+        { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
+        { "command": "assertText", "target": "css=#result .ok", "value": "Hello Alice" },
+
+        { "command": "assertText", "target": "css=#result ul li:nth-child(1)", "value": "Street: Herzl St." },
+        { "command": "assertText", "target": "css=#result ul li:nth-child(5)", "value": "Selected courses: DevOps 101, Kubernetes" },
+
+        { "command": "click", "target": "id=docsLink" },
+        { "command": "waitForElementVisible", "target": "css=h1", "value": "5000" },
+        { "command": "assertText", "target": "css=h1", "value": "Docs" }
+      ]
+    },
+    {
+      "id": "t-he",
+      "name": "Greeting HE (שלום)",
+      "commands": [
+        { "command": "open", "target": "http://localhost:8080/DevOps/index.jsp" },
+        { "command": "assertTitle", "target": "HIT DevOps App" },
+
+        { "command": "click",  "target": "css=input[name='lang'][value='he']" },
+        { "command": "select", "target": "id=userSelect", "value": "value=bob" },
+
+        { "command": "click",  "target": "id=submitBtn" },
+        { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
+        { "command": "assertText", "target": "css=#result .ok", "value": "שלום Bob" }
+      ]
+    },
+    {
+      "id": "t-none",
+      "name": "Default no courses",
+      "commands": [
+        { "command": "open", "target": "http://localhost:8080/DevOps/index.jsp" },
+        { "command": "assertTitle", "target": "HIT DevOps App" },
 
         { "command": "click", "target": "id=submitBtn" },
-
         { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
-        { "command": "assertTextMatches",     "target": "css=#result .ok", "value": "regexp:^Hello\\b.*" },
+        { "command": "assertText", "target": "css=#result .ok", "value": "Hello Alice" },
+        { "command": "assertText", "target": "css=#result ul li:nth-child(5)", "value": "Selected courses: none" }
+      ]
+    },
+    {
+      "id": "t-refresh",
+      "name": "Submit twice updates result",
+      "commands": [
+        { "command": "open", "target": "http://localhost:8080/DevOps/index.jsp" },
 
-        { "command": "click",     "target": "id=docsLink" },
-        { "command": "assertUrl", "target": "*docs.jsp" }
+        { "command": "select", "target": "id=streetSelect", "value": "label=Herzl St." },
+        { "command": "click",  "target": "id=submitBtn" },
+        { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
+        { "command": "assertText", "target": "css=#result ul li:nth-child(1)", "value": "Street: Herzl St." },
+
+        { "command": "select", "target": "id=streetSelect", "value": "label=Bialik St." },
+        { "command": "click",  "target": "id=submitBtn" },
+        { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
+        { "command": "assertText", "target": "css=#result ul li:nth-child(1)", "value": "Street: Bialik St." }
       ]
     }
   ],
   "suites": [
-    { "id": "default", "name": "Default Suite", "persistSession": false, "tests": ["home-flow"] }
+    {
+      "id": "suite-default",
+      "name": "Default Suite",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300000,
+      "tests": ["t-home", "t-he", "t-none", "t-refresh"]
+    }
   ]
 }
