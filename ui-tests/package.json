@@ -1,0 +1,12 @@
+{
+  "name": "devops-ui-tests",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Selenium WebDriver tests for HIT DevOps App",
+  "scripts": {
+    "test": "node tests_webdriver.js"
+  },
+  "dependencies": {
+    "selenium-webdriver": "4.23.0"
+  }
+}
