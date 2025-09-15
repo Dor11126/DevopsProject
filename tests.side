@@ -1,60 +1,226 @@
 {
-  "id": "hit-devops-sample",
+  "id": "ff36c92f-c07c-4cf8-8f33-37bf99e71eda",
   "version": "2.0",
-  "name": "HIT DevOps App",
-  "url": "http://localhost:8080/HIT_GroupApp/index.jsp",
-  "tests": [
-    {
-      "id": "home-flow",
-      "name": "Home Flow",
-      "commands": [
-        {
-          "id": "open",
-          "command": "open",
-          "target": "/HIT_GroupApp/index.jsp"
-        },
-        {
-          "id": "assert",
-          "command": "assertTitle",
-          "target": "HIT DevOps App"
-        },
-        {
-          "id": "type",
-          "command": "type",
-          "target": "id=name",
-          "value": "Shay"
-        },
-        {
-          "id": "click",
-          "command": "click",
-          "target": "id=submitBtn"
-        },
-        {
-          "id": "assertText",
-          "command": "assertText",
-          "target": "id=result",
-          "value": "Hello"
-        },
-        {
-          "id": "click",
-          "command": "click",
-          "target": "id=docsLink"
-        },
-        {
-          "id": "assert",
-          "command": "assertUrl",
-          "target": "*docs.jsp"
-        }
-      ]
-    }
-  ],
-  "suites": [
-    {
-      "id": "suite1",
-      "name": "smoke",
-      "tests": [
-        "home-flow"
-      ]
-    }
-  ]
+  "name": "Devops personal site",
+  "url": "",
+  "tests": [{
+    "id": "e7b2a143-5772-4f3c-80c7-852004ae88bc",
+    "name": "Untitled",
+    "commands": [{
+      "id": "1062611f-e236-4b78-b9a1-ac65a91eb812",
+      "comment": "",
+      "command": "click",
+      "target": "css=h1",
+      "targets": [
+        ["css=h1", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'HIT DevOps App')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "cd2c8454-4283-41ac-a40d-d13ad63b1e5f",
+      "comment": "",
+      "command": "click",
+      "target": "css=h1",
+      "targets": [
+        ["css=h1", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'HIT DevOps App')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4ed9717a-b9fa-454c-908f-7cf26116e3a4",
+      "comment": "",
+      "command": "doubleClick",
+      "target": "css=h1",
+      "targets": [
+        ["css=h1", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'HIT DevOps App')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "0437a01d-a26c-4f90-b2bd-d5535d101594",
+      "comment": "",
+      "command": "click",
+      "target": "css=h1",
+      "targets": [
+        ["css=h1", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'HIT DevOps App')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1accbbb9-4fc9-42af-ab07-d7f44a12a0ac",
+      "comment": "",
+      "command": "click",
+      "target": "id=name",
+      "targets": [
+        ["id=name", "id"],
+        ["name=name", "name"],
+        ["css=#name", "css:finder"],
+        ["xpath=//input[@id='name']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "be2aeb89-35c9-4ea4-9be4-e1b0a3246a84",
+      "comment": "",
+      "command": "type",
+      "target": "id=name",
+      "targets": [
+        ["id=name", "id"],
+        ["name=name", "name"],
+        ["css=#name", "css:finder"],
+        ["xpath=//input[@id='name']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Dor Cohen"
+    }, {
+      "id": "4a4c284f-01b4-4287-a61a-50af43f010df",
+      "comment": "",
+      "command": "click",
+      "target": "id=phone",
+      "targets": [
+        ["id=phone", "id"],
+        ["name=phone", "name"],
+        ["css=#phone", "css:finder"],
+        ["xpath=//input[@id='phone']", "xpath:attributes"],
+        ["xpath=//div[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "436cea23-4284-4cd4-81fb-f5bf91d2259b",
+      "comment": "",
+      "command": "type",
+      "target": "id=phone",
+      "targets": [
+        ["id=phone", "id"],
+        ["name=phone", "name"],
+        ["css=#phone", "css:finder"],
+        ["xpath=//input[@id='phone']", "xpath:attributes"],
+        ["xpath=//div[3]/input", "xpath:position"]
+      ],
+      "value": "052000000"
+    }, {
+      "id": "875bfda8-2689-4be0-8f3f-65fd2e60f907",
+      "comment": "",
+      "command": "click",
+      "target": "css=.row:nth-child(3) > label:nth-child(3)",
+      "targets": [
+        ["css=.row:nth-child(3) > label:nth-child(3)", "css:finder"],
+        ["xpath=//label[2]", "xpath:position"],
+        ["xpath=//label[contains(.,' נייד (Mobile)')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe39082b-e7d9-4173-95a8-a661e906a741",
+      "comment": "",
+      "command": "click",
+      "target": "css=.row:nth-child(6) > label:nth-child(3)",
+      "targets": [
+        ["css=.row:nth-child(6) > label:nth-child(3)", "css:finder"],
+        ["xpath=//div[6]/label[3]", "xpath:position"],
+        ["xpath=//label[contains(.,' CI/CD Pipelines')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ef39d89b-8f78-4004-99dd-e105ad8697a4",
+      "comment": "",
+      "command": "click",
+      "target": "css=label:nth-child(5)",
+      "targets": [
+        ["css=label:nth-child(5)", "css:finder"],
+        ["xpath=//label[5]", "xpath:position"],
+        ["xpath=//label[contains(.,' Monitoring & Logging')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "10bcb599-7188-4860-a73b-a234c60622ab",
+      "comment": "",
+      "command": "click",
+      "target": "id=submitBtn",
+      "targets": [
+        ["id=submitBtn", "id"],
+        ["css=#submitBtn", "css:finder"],
+        ["xpath=//button[@id='submitBtn']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Submit')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fc3b89f1-5c30-4222-8150-436b8206cab3",
+      "comment": "",
+      "command": "assert",
+      "target": "css=.ok",
+      "targets": [],
+      "value": "Hello"
+    }, {
+      "id": "9140b57a-983e-44cc-9280-b3eee1fb0582",
+      "comment": "",
+      "command": "click",
+      "target": "id=docsLink",
+      "targets": [
+        ["id=docsLink", "id"],
+        ["linkText=Docs", "linkText"],
+        ["css=#docsLink", "css:finder"],
+        ["xpath=//a[contains(text(),'Docs')]", "xpath:link"],
+        ["xpath=//a[@id='docsLink']", "xpath:attributes"],
+        ["xpath=//a[contains(@href, 'docs.jsp')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Docs')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1c9c8efe-35f0-4ec4-b683-9151b4bdcad1",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=back",
+      "targets": [
+        ["linkText=back", "linkText"],
+        ["css=a", "css:finder"],
+        ["xpath=//a[contains(text(),'back')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'index.jsp')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'back')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2fcc1089-d041-4067-a6ab-a1e47a561647",
+      "comment": "",
+      "command": "click",
+      "target": "css=header",
+      "targets": [
+        ["css=header", "css:finder"],
+        ["xpath=//header", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "953f0513-e5f8-4e8f-8bc8-a7e9b25200d5",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "id=docsLink",
+      "targets": [
+        ["id=docsLink", "id"],
+        ["linkText=Docs", "linkText"],
+        ["css=#docsLink", "css:finder"],
+        ["xpath=//a[contains(text(),'Docs')]", "xpath:link"],
+        ["xpath=//a[@id='docsLink']", "xpath:attributes"],
+        ["xpath=//a[contains(@href, 'docs.jsp')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Docs')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "35c1ac31-aea4-478e-807b-bdf7ffd342d6",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e7b2a143-5772-4f3c-80c7-852004ae88bc"]
+  }],
+  "urls": [],
+  "plugins": []
 }
