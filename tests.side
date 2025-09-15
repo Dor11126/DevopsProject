@@ -8,17 +8,18 @@
       "id": "home-flow",
       "name": "Home Flow",
       "commands": [
-        { "id":"open",         "command":"open",        "target":"http://localhost:8080/DevOps/index.jsp" },
-        { "id":"assertTitle",  "command":"assertTitle", "target":"HIT DevOps App" },
+        { "command": "open",        "target": "http://localhost:8080/DevOps/index.jsp" },
+        { "command": "assertTitle", "target": "HIT DevOps App" },
 
-        { "id":"type",         "command":"type",        "target":"id=name",      "value":"Dor Cohen" },
-        { "id":"click",        "command":"click",       "target":"id=submitBtn" },
+        { "command": "click", "target": "css=input[name='lang'][value='en']" },
+        { "command": "type",  "target": "id=name",      "value": "Dor Cohen" },
+        { "command": "click", "target": "id=submitBtn" },
 
-        { "id":"waitResult",   "command":"waitForElementVisible", "target":"css=#result", "value":"5000" },
-        { "id":"assertText",   "command":"assertText",  "target":"css=#result", "value":"*Hello*" },
+        { "command": "waitForElementVisible", "target": "css=#result .ok", "value": "5000" },
+        { "command": "assertTextMatches",     "target": "css=#result .ok", "value": "regexp:^Hello\\b.*" },
 
-        { "id":"clickDocs",    "command":"click",       "target":"id=docsLink" },
-        { "id":"assertUrl",    "command":"assertUrl",   "target":"*docs.jsp" }
+        { "command": "click",      "target": "id=docsLink" },
+        { "command": "assertUrl",  "target": "*docs.jsp" }
       ]
     }
   ],
