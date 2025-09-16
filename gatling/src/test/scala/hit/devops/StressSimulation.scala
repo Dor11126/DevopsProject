@@ -6,7 +6,7 @@ import io.gatling.http.Predef._
 
 class StressSimulation extends Simulation {
 
-  val baseUrl = System.getProperty("BASE_URL", "http://localhost:8080/HIT_GroupApp")
+  val baseUrl = System.getProperty("BASE_URL", "http://localhost:8080/DevOps")
   val httpProtocol = http.baseUrl(baseUrl)
 
   val scn = scenario("Stress")
