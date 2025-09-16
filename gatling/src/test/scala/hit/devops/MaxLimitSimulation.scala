@@ -5,11 +5,12 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
 class MaxLimitSimulation extends Simulation {
-  val baseUrl  = sys.props.getOrElse("BASE_URL", "http://localhost:8080/DevOps")
-  val rampMax  = sys.props.getOrElse("RAMP_MAX",  "200").toDouble
-  val rampMins = sys.props.getOrElse("RAMP_MINS", "6").toInt
+  val baseUrl   = sys.props.getOrElse("BASE_URL", "http://localhost:8080/DevOps")
+  val targetRps = sys.props.getOrElse("RAMP_MAX",  "3500").toDouble   // users/sec
+  val rampSecs  = sys.props.getOrElse("RAMP_SECS", "60").toInt        // 60s ramp
+  val holdSecs  = sys.props.getOrElse("HOLD_SECS", "300").toInt       // 300s hold (סה״כ 6 דק׳)
 
-  val httpProtocol = http.baseUrl(baseUrl)
+  val httpProtocol = http.baseUrl(baseUrl).shareConnections   // Keep-Alive
 
   val scn = scenario("home").exec(
     http("home").get("/index.jsp")
@@ -17,8 +18,13 @@ class MaxLimitSimulation extends Simulation {
 
   setUp(
     scn.inject(
-      rampUsersPerSec(1.0).to(rampMax).during(rampMins.minutes)
+      rampUsersPerSec(0).to(targetRps) during (rampSecs.seconds),
+      constantUsersPerSec(targetRps)    during (holdSecs.seconds)
     )
   ).protocols(httpProtocol)
-  // assertions נשארות כמו אצלך
+   .assertions(
+     global.failedRequests.percent.lt(2.0),             // KO < 2%
+     global.responseTime.percentile3.lt(1200)           // p95 < 1200ms
+   )
+   .maxDuration((rampSecs + holdSecs).seconds)
 }
